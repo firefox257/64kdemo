@@ -13,7 +13,7 @@
 #define false 0
 #define null 0
 
-const char * name = "demo";
+const char * appName = "demo";
 
 #define DEBUG
 
@@ -81,7 +81,7 @@ LONG WINAPI WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return DefWindowProc(hWnd, uMsg, wParam, lParam); 
 } 
 
-HWND CreateOpenGLWindow(char* title, int x, int y, int width, int height, 
+HWND CreateOpenGLWindow(int x, int y, int width, int height, 
 		   BYTE type, DWORD flags)
 {
     int         pf;
@@ -92,34 +92,33 @@ HWND CreateOpenGLWindow(char* title, int x, int y, int width, int height,
     static HINSTANCE hInstance = 0;
 
     /* only register the window class once - use hInstance as a flag. */
-    if (!hInstance) {
-	hInstance = GetModuleHandle(NULL);
-	wc.style         = CS_OWNDC;
-	wc.lpfnWndProc   = (WNDPROC)WindowProc;
-	wc.cbClsExtra    = 0;
-	wc.cbWndExtra    = 0;
-	wc.hInstance     = hInstance;
-	wc.hIcon         = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = NULL;
-	wc.lpszMenuName  = NULL;
-	wc.lpszClassName = name;
+    if (!hInstance) 
+	{
+		hInstance = GetModuleHandle(NULL);
+		wc.style         = CS_OWNDC;
+		wc.lpfnWndProc   = (WNDPROC)WindowProc;
+		wc.cbClsExtra    = 0;
+		wc.cbWndExtra    = 0;
+		wc.hInstance     = hInstance;
+		wc.hIcon         = LoadIcon(NULL, IDI_WINLOGO);
+		wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = NULL;
+		wc.lpszMenuName  = NULL;
+		wc.lpszClassName = appName;
 
-	if (!RegisterClass(&wc)) {
-	    MessageBox(NULL, "RegisterClass() failed:  "
-		       "Cannot register window class.", "Error", MB_OK);
-	    return NULL;
-	}
+		if (!RegisterClass(&wc)) 
+		{
+			logStr("Cannot register window class.");
+			return NULL;
+		}
     }
 
-    hWnd = CreateWindow(name, title, WS_OVERLAPPEDWINDOW |
-			WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-			x, y, width, height, NULL, NULL, hInstance, NULL);
+    hWnd = CreateWindow(appName, appName, WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, x, y, width, height, NULL, NULL, hInstance, NULL);
 
-    if (hWnd == NULL) {
-	MessageBox(NULL, "CreateWindow() failed:  Cannot create a window.",
-		   "Error", MB_OK);
-	return NULL;
+    if (hWnd == NULL) 
+	{
+			   logStr("CreateWindow() failed:  Cannot create a window.\r\n");
+		return NULL;
     }
 
     hDC = GetDC(hWnd);
@@ -134,16 +133,16 @@ HWND CreateOpenGLWindow(char* title, int x, int y, int width, int height,
     pfd.cColorBits   = 32;
 
     pf = ChoosePixelFormat(hDC, &pfd);
-    if (pf == 0) {
-	MessageBox(NULL, "ChoosePixelFormat() failed:  "
-		   "Cannot find a suitable pixel format.", "Error", MB_OK); 
-	return 0;
+    if (pf == 0) 
+	{
+		logStr("Cannot find a suitable pixel format.\r\n");
+		return 0;
     } 
  
-    if (SetPixelFormat(hDC, pf, &pfd) == FALSE) {
-	MessageBox(NULL, "SetPixelFormat() failed:  "
-		   "Cannot set format specified.", "Error", MB_OK);
-	return 0;
+    if (SetPixelFormat(hDC, pf, &pfd) == FALSE) 
+	{
+		logStr("Cannot set format specified.\r\n");
+		return 0;
     } 
 
     DescribePixelFormat(hDC, pf, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
@@ -159,14 +158,14 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst, LPSTR lpsz
 	#ifdef DEBUG
 		logFile = fopen("log.txt", "a");
 	#endif
-	
+	logStr("#################start##############################\r\n");
 	
     HDC hDC;				/* device context */
     HGLRC hRC;				/* opengl context */
     HWND  hWnd;				/* window */
     MSG   msg;				/* message */
 
-    hWnd = CreateOpenGLWindow(name, 0, 0, 256, 256, PFD_TYPE_RGBA, 0);
+    hWnd = CreateOpenGLWindow(0, 0, 256, 256, PFD_TYPE_RGBA, 0);
     if (hWnd == NULL)
 	return 1;
 
@@ -175,7 +174,7 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst, LPSTR lpsz
     wglMakeCurrent(hDC, hRC);
 
     ShowWindow(hWnd, nCmdShow);
-
+	
     while(GetMessage(&msg, hWnd, 0, 0)) 
 	{
 		TranslateMessage(&msg);
