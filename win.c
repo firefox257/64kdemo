@@ -37,9 +37,15 @@ const char * appName = "demo";
 
 ulong milli()
 {
-	FILETIME ft;
+	static FILETIME ft;
 	GetSystemTimeAsFileTime(&ft);
 	return ((((ulong)ft.dwHighDateTime) << 32) | ft.dwLowDateTime)/10000;
+}
+ulong micro()
+{
+	static FILETIME ft;
+	GetSystemTimeAsFileTime(&ft);
+	return ((((ulong)ft.dwHighDateTime) << 32) | ft.dwLowDateTime)/10;
 }
 
 
