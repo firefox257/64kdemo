@@ -23,13 +23,13 @@
 
 const char * appName = "demo";
 
-#define NODEBUG
+#define DEBUG
 
 #ifdef DEBUG
 	#include <stdio.h>
 	FILE * logFile;
 
-	void logBool(bool b)
+	/*void logBool(bool b)
 	{
 		if(b) fwrite("true", 1, 4, logFile);
 		else fwrite("false", 1, 5, logFile);
@@ -105,10 +105,13 @@ const char * appName = "demo";
 		while(msg[s] != 0) s++;
 		fwrite(msg, 1, s, logFile);
 		fflush(logFile);
-	}
+	}*/
+	
+	#define logStr(f) fprintf(logFile, f); fflush(logFile);
+	#define logStrf(f, ...) fprintf(logFile, f, __VA_ARGS__); fflush(logFile);
 	
 #else 
-	#define logBool(msg)
+	/*#define logBool(msg)
 	#define logChar(msg)
 	#define logUChar(msg)
 	#define logShort(msg)
@@ -119,7 +122,8 @@ const char * appName = "demo";
 	#define logULong(msg)
 	#define logFloat(msg)
 	#define logDouble(msg)
-	#define logStr(msg)  
+	#define logStr(msg)  */
+	#define log(f, ...)
 #endif
 
 
@@ -264,7 +268,9 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst, LPSTR lpsz
 		logFile = fopen("log.txt", "a");
 	#endif
 	logStr("#################start##############################\r\n");
-	logDouble(123.123); logStr("\r\n");
+	logStrf("%f\r\n", 123.123);
+	
+	
     HDC hDC;				/* device context */
     HGLRC hRC;				/* opengl context */
     HWND  hWnd;				/* window */
