@@ -28,102 +28,14 @@ const char * appName = "demo";
 #ifdef DEBUG
 	#include <stdio.h>
 	FILE * logFile;
-
-	/*void logBool(bool b)
-	{
-		if(b) fwrite("true", 1, 4, logFile);
-		else fwrite("false", 1, 5, logFile);
-	}
-	void logChar(char c)
-	{
-		fwrite(&c, 1, 1, logFile);
-	}
-	void logUChar(uchar c)
-	{
-		fwrite(&c, 1, 1, logFile);
-	}
-	
-	void logShort(short d)
-	{
-		char b[20];
-		int s = sprintf(b, "%d", d);
-		fwrite(b, 1, s, logFile);	
-	}
-	void logUShort(ushort d)
-	{
-		char b[20];
-		int s = sprintf(b, "%u", d);
-		fwrite(b, 1, s, logFile);	
-	}
-	
-	void logInt(int d)
-	{
-		char b[20];
-		int s = sprintf(b, "%d", d);
-		fwrite(b, 1, s, logFile);	
-	}
-	
-	void logUInt(uint d)
-	{
-		char b[20];
-		int s = sprintf(b, "%u", d);
-		fwrite(b, 1, s, logFile);	
-	}
-	
-	void logULong(ulong d)
-	{
-		char b[20];
-		int s = sprintf(b, "%ll", d);
-		fwrite(b, 1, s, logFile);	
-	}
-	
-	void logLlong(llong d)
-	{
-		char b[20];
-		int s = sprintf(b, "%ll", d);
-		fwrite(b, 1, s, logFile);	
-	}
-	
-	void logFloat(float d)
-	{
-		char b[20];
-		int s = sprintf(b, "%f", d);
-		fwrite(b, 1, s, logFile);	
-	}
-	
-	void logDouble(double d)
-	{
-		char b[20];
-		int s = sprintf(b, "%f", d);
-		fwrite(b, 1, s, logFile);	
-	}
-	
-	
-	void logStr(char * msg)
-	{
-		int s = 0;
-		while(msg[s] != 0) s++;
-		fwrite(msg, 1, s, logFile);
-		fflush(logFile);
-	}*/
 	
 	#define logStr(f) fprintf(logFile, f); fflush(logFile);
 	#define logStrf(f, ...) fprintf(logFile, f, __VA_ARGS__); fflush(logFile);
 	
 #else 
-	/*#define logBool(msg)
-	#define logChar(msg)
-	#define logUChar(msg)
-	#define logShort(msg)
-	#define logUShort(msg)
-	#define logInt(msg)
-	#define logUInt(msg)
-	#define logLlong(msg)
-	#define logULong(msg)
-	#define logFloat(msg)
-	#define logDouble(msg)
-	#define logStr(msg)  */
-	#define log(f, ...)
+	
+	#define logStr(f) 
+	#define logStrf(f, ...) 
 #endif
 
 
