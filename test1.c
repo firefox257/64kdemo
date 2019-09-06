@@ -43,6 +43,8 @@ void p3aFree(struct p3a*at)
 	at->s = 0;
 	free(at->d);
 }
+
+
 int main()
 {
 	#ifdef DEBUG

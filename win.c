@@ -13,6 +13,8 @@
 #define false 0
 #define null 0
 
+#define ulong unsigned long long
+
 const char * appName = "demo";
 
 #define DEBUG
@@ -31,6 +33,15 @@ const char * appName = "demo";
 #else 
 	#define logStr(msg)  
 #endif
+
+
+ulong milli()
+{
+	FILETIME ft;
+	GetSystemTimeAsFileTime(&ft);
+	return ((((ulong)ft.dwHighDateTime) << 32) | ft.dwLowDateTime)/10000;
+}
+
 
 void display()
 {
@@ -52,30 +63,30 @@ LONG WINAPI WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 { 
 	
     static PAINTSTRUCT ps;
-
+	
     switch(uMsg) {
-    case WM_PAINT:
-	display();
-	BeginPaint(hWnd, &ps);
-	EndPaint(hWnd, &ps);
-	return 0;
+		case WM_PAINT:
+			display();
+			BeginPaint(hWnd, &ps);
+			EndPaint(hWnd, &ps);
+		return 0;
 
-    case WM_SIZE:
-	glViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
-	PostMessage(hWnd, WM_PAINT, 0, 0);
-	return 0;
+		case WM_SIZE:
+			glViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
+			PostMessage(hWnd, WM_PAINT, 0, 0);
+		return 0;
 
-    case WM_CHAR:
-	switch (wParam) {
-	case 27:			/* ESC key */
-	    PostQuitMessage(0);
-	    break;
-	}
-	return 0;
+		case WM_CHAR:
+		switch (wParam) {
+		case 27:			/* ESC key */
+			PostQuitMessage(0);
+			break;
+		}
+		return 0;
 
-    case WM_CLOSE:
-	PostQuitMessage(0);
-	return 0;
+		case WM_CLOSE:
+			PostQuitMessage(0);
+			return 0;
     }
 
     return DefWindowProc(hWnd, uMsg, wParam, lParam); 
@@ -159,6 +170,15 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst, LPSTR lpsz
 		logFile = fopen("log.txt", "a");
 	#endif
 	logStr("#################start##############################\r\n");
+	/*logStr("start\r\n");
+	ulong t1 = milli();
+	ulong t2 = t1;
+	while((t2 - t1)< 3000)
+	{
+		t2 = milli();
+	}
+	logStr("end\r\n");*/
+	
 	
     HDC hDC;				/* device context */
     HGLRC hRC;				/* opengl context */
@@ -174,12 +194,17 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst, LPSTR lpsz
     wglMakeCurrent(hDC, hRC);
 
     ShowWindow(hWnd, nCmdShow);
-	
-    while(GetMessage(&msg, hWnd, 0, 0)) 
+	while(true)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-    }
+		while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))//while(GetMessage(&msg, hWnd, 0, 0)) 
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		
+		if(msg.message == WM_QUIT)
+        break;
+	}
 
     wglMakeCurrent(NULL, NULL);
     ReleaseDC(hDC, hWnd);
