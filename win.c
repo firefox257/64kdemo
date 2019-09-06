@@ -210,6 +210,8 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst, LPSTR lpsz
 		
 		if(msg.message == WM_QUIT)
         break;
+	
+		Sleep(33);
 	}
 
     wglMakeCurrent(NULL, NULL);
